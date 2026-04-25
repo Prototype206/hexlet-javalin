@@ -40,24 +40,30 @@ public class HelloWorld {
             });
 
         app.get("/", ctx -> ctx.render("index.jte"));
-        app.get("/courses/{id}", ctx -> {
-            var currentId = ctx.pathParamAsClass("id", Long.class).getOrDefault(-1L);
-            Course course = new Course(1L, "Dark_magic", "Become a great darkMAN");
-            Course course1 = new Course(2L, "White_magic", "Staying Alive");
-            Course course2 = new Course(3L, "Money_Magic", "Become a blunt money man");
-            Course course3 = new Course(4L, "Starcraft_Magic", "Become great CyberWaflya");
-            Course course4 = new Course(5L, "Java-Developer", "Become a java-developer i guess...");
-            List<Course> courses = List.of(course, course1, course2, course3, course4);
+
+        Course course0 = new Course(1L, "Dark_magic", "Become a great darkMAN");
+        Course course1 = new Course(2L, "White_magic", "Staying Alive");
+        Course course2 = new Course(3L, "Money_Magic", "Become a blunt money man");
+        Course course3 = new Course(4L, "Starcraft_Magic", "Become great CyberWaflya");
+        Course course4 = new Course(5L, "Java-Developer", "Become a java-developer i guess...");
+        List<Course> courses = List.of(course0, course1, course2, course3, course4);
+
+        app.get("/courses", ctx -> {
             CoursesPage page = new CoursesPage(courses, "A lot of courses here to learn");
             ctx.render("courses/FileToBeWorking.jte", model("page", page));
         });
-//
-//        app.get("/courses", ctx -> {
-//            var courses =
-//            var header =
-//            var page = new CoursesPage(courses, header);
-//            ctx.render("courses/index.jte", model("page", page));
-//        });
+
+        app.get("/courses/{id}", ctx -> {
+            Long courseId = ctx.pathParamAsClass("id", Long.class).get();
+            Course page = null;
+            for(Course course : courses) {
+                if(course.getId() == courseId) {
+                    page = new Course(course.getId(), course.getName(), course.getDescription());
+                    break;
+                }
+            }
+            ctx.render("courses/show.jte" , model("page", page));
+        });
 
         app.start(7070);
     }

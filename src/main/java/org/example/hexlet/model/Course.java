@@ -9,8 +9,6 @@ import lombok.ToString;
 @ToString
 public final class Course {
     private Long id;
-
-    @ToString.Include
     private String name;
     private String description;
 
@@ -18,5 +16,15 @@ public final class Course {
         this.id = id;
         this.name = name;
         this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+    public String getName() {
+        return name;
+    }
+    public String getDescription() {
+        return description;
     }
 }
