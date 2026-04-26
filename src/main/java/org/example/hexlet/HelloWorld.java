@@ -2,10 +2,14 @@ package org.example.hexlet;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.example.hexlet.dto.courses.CoursesPage;
 import org.example.hexlet.model.Course;
+import org.example.hexlet.model.User;
+import org.example.hexlet.repository.CourseRepository;
+import org.example.hexlet.repository.UserRepository;
 
 import io.javalin.Javalin;
 import io.javalin.plugin.bundled.DevLoggingPlugin;
@@ -19,50 +23,110 @@ public class HelloWorld {
             //config.bundledPlugins.enableDevLogging();
         });
 
-        app.post("/users", ctx -> ctx.result("POST /users"));
-        app.get("/users", ctx -> ctx.result("GET /users"));
-        app.get("/hello", ctx -> {
-            var name = ctx.queryParamAsClass("name", String.class).getOrDefault("World");
-            ctx.result("Hello, " + name + "!");
-        });
+//        app.post("/users", ctx -> ctx.result("POST /users"));
+//        app.get("/users", ctx -> ctx.result("GET /users"));
+//        app.get("/hello", ctx -> {
+//            var name = ctx.queryParamAsClass("name", String.class).getOrDefault("World");
+//            ctx.result("Hello, " + name + "!");
+//        });
+
 //        app.get("/courses/{courseId}/lessons/{id}", ctx -> {
 //            var courseId = ctx.pathParam("courseId");
 //            var lessonId =  ctx.pathParam("id");
 //            ctx.result("Course ID: " + courseId + " Lesson ID: " + lessonId);
 //        });
         //app.get("/courses/{id}", ctx -> {ctx.result("Course ID: " + ctx.pathParam("id"));});
-        app.get("/users/{id}", ctx -> {ctx.result("User ID: " + ctx.pathParam("id"));});
 
-        app.get("/users/{id}/post/{postId}", ctx -> {
-            var id = ctx.pathParam("id");
-            var postId = ctx.pathParam("postId");
-            ctx.result("Id = " + id + " + postId = " + postId);
-            });
+//        app.get("/users/{id}", ctx -> {ctx.result("User ID: " + ctx.pathParam("id"));});
+//        app.get("/users/{id}/post/{postId}", ctx -> {
+//            var id = ctx.pathParam("id");
+//            var postId = ctx.pathParam("postId");
+//            ctx.result("Id = " + id + " + postId = " + postId);
+//            });
+//        app.get("/", ctx -> ctx.render("index.jte"));
 
-        app.get("/", ctx -> ctx.render("index.jte"));
+//        Course course0 = new Course(1L, "Dark_magic", "Become a great darkMAN");
+//        Course course1 = new Course(2L, "White_magic", "Staying Alive");
+//        Course course2 = new Course(3L, "Money_Magic", "Become a blunt money man");
+//        Course course3 = new Course(4L, "Starcraft_Magic", "Become great CyberWaflya");
+//        Course course4 = new Course(5L, "Java-Developer", "Become a java-developer i guess...");
+//        Course course5 = new Course(6L, "Tanks", "Welcome to WarThunder!");
+//        List<Course> courses = List.of(course0, course1, course2, course3, course4, course5);
 
-        Course course0 = new Course(1L, "Dark_magic", "Become a great darkMAN");
-        Course course1 = new Course(2L, "White_magic", "Staying Alive");
-        Course course2 = new Course(3L, "Money_Magic", "Become a blunt money man");
-        Course course3 = new Course(4L, "Starcraft_Magic", "Become great CyberWaflya");
-        Course course4 = new Course(5L, "Java-Developer", "Become a java-developer i guess...");
-        List<Course> courses = List.of(course0, course1, course2, course3, course4);
+        app.post("/courses", ctx -> {
+            String name = ctx.formParam("nAme");
+            String description = ctx.formParam("dEscription");
 
-        app.get("/courses", ctx -> {
-            CoursesPage page = new CoursesPage(courses, "A lot of courses here to learn");
-            ctx.render("courses/FileToBeWorking.jte", model("page", page));
+            Course course = new Course(name, description);
+            CourseRepository.save(course);
+            ctx.redirect("/courses");
         });
 
-        app.get("/courses/{id}", ctx -> {
-            Long courseId = ctx.pathParamAsClass("id", Long.class).get();
-            Course page = null;
-            for(Course course : courses) {
-                if(course.getId() == courseId) {
-                    page = new Course(course.getId(), course.getName(), course.getDescription());
-                    break;
-                }
-            }
-            ctx.render("courses/show.jte" , model("page", page));
+        app.get("/courses", ctx -> {
+            ctx.render("courses/FileToBeWorking.jte", model("courses", CourseRepository.getEntities()));
+        });
+
+        app.get("/courses/build", ctx -> {
+            ctx.render("courses/build.jte");
+        });
+
+//        app.get("/courses/{id}", ctx -> {
+//            Long courseId = ctx.pathParamAsClass("id", Long.class).get();
+//            Course page = null;
+//            for(Course course : CourseRepository.getEntities()) {
+//                if(course.getId() == courseId) {
+//                    page = new Course(course.getId(), course.getName(), course.getDescription());
+//                    break;
+//                }
+//            }
+//            ctx.render("courses/show.jte", model("page", page));
+//        });
+
+//        app.get("/defence/{id}", ctx -> {
+//            var id = ctx.pathParam("id");
+//            ctx.contentType("html");
+//            //ctx.result("&lth1&gt" + id + "&lt/h1&gt");
+//            ctx.render("index.jte", model("id", id));
+//        });
+
+//        app.get("/courses", ctx -> {
+//            var term = ctx.queryParam("term");
+//            var filter = ctx.queryParam("filter");
+//            List<Course> coursesWithFilter = new ArrayList<>();
+//            if (term != null && !term.isEmpty() || filter != null && !filter.isEmpty()) {
+//                for(Course course : courses) {
+//                    if(course.getName().toLowerCase().equals(term.toLowerCase()) && !term.isEmpty() || course.getDescription().toLowerCase().contains(filter.toLowerCase()) && !filter.isEmpty()) {
+//                        coursesWithFilter.add(course);
+//                    }
+//                }
+//            }
+//            else {
+//                coursesWithFilter = courses;
+//            }
+//            var page = new CoursesPage(coursesWithFilter, term, filter);
+//            ctx.render("courses/index.jte", model("page", page));
+//        });
+
+
+
+        app.get("/users/build", ctx -> {
+            ctx.render("users/build.jte");
+        });
+
+        app.post("/users", ctx -> {
+            var name = ctx.formParam("name");
+            var email = ctx.formParam("email").trim().toLowerCase();
+            var password = ctx.formParam("password");
+            var passwordConfirmation = ctx.formParam("passwordConfirmation");
+
+            var user = new User(name, email, password);
+            UserRepository.save(user);
+
+            ctx.redirect("/users");
+        });
+
+        app.get("/users", ctx -> {
+            ctx.render("users/showUsers.jte", model("users", UserRepository.getEntities()));
         });
 
         app.start(7070);

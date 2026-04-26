@@ -1,20 +1,18 @@
-@import org.example.hexlet.dto.courses.CoursesPage
 @import java.util.List
 @import org.example.hexlet.model.Course
 
-@param CoursesPage page
+@param List<Course> courses
 
 
 @template.layout.main(
 	content = @`
-		<h1>${page.getHeader()}</h1>
 		<table border = "1">
 			<tr>
 				<th>ID</th>
 				<th>NAME</th>
 				<th>DESCRIPTION</th>
 			</tr>
-			@for(Course course : page.getCourses())
+			@for(Course course : courses)
 				<tr>
 					<td><a href = "/courses/${course.getId()}">${course.getId()}</a></td>
 					<td>${course.getName()}</td>
