@@ -5,7 +5,9 @@ import static io.javalin.rendering.template.TemplateUtil.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.example.hexlet.dto.courses.BuildCoursePage;
 import org.example.hexlet.dto.courses.CoursesPage;
+import org.example.hexlet.dto.users.BuildUserPage;
 import org.example.hexlet.model.Course;
 import org.example.hexlet.model.User;
 import org.example.hexlet.repository.CourseRepository;
@@ -14,6 +16,7 @@ import org.example.hexlet.repository.UserRepository;
 import io.javalin.Javalin;
 import io.javalin.plugin.bundled.DevLoggingPlugin;
 import io.javalin.rendering.template.JavalinJte;
+import io.javalin.validation.ValidationException;
 
 public class HelloWorld {
     public static void main(String[] args) {
@@ -54,12 +57,21 @@ public class HelloWorld {
 //        List<Course> courses = List.of(course0, course1, course2, course3, course4, course5);
 
         app.post("/courses", ctx -> {
-            String name = ctx.formParam("nAme");
-            String description = ctx.formParam("dEscription");
+            String name = ctx.formParam("name");
+            String description = ctx.formParam("description");
+            try {
+                name = ctx.formParamAsClass("name", String.class)
+                        .check(value -> value.length() > 2, "Имя должно быть длинее 2 символов").get();
+                description = ctx.formParamAsClass("description", String.class)
+                        .check(value -> value.length() > 10, "Описание должно быть больше 10 символов").get();
 
-            Course course = new Course(name, description);
-            CourseRepository.save(course);
-            ctx.redirect("/courses");
+                var course = new Course(name, description);
+                CourseRepository.save(course);
+                ctx.redirect("/courses");
+            } catch (ValidationException e) {
+                var page = new BuildCoursePage(name, description, e.getErrors());
+                ctx.render("courses/build.jte", model("page", page));
+            }
         });
 
         app.get("/courses", ctx -> {
@@ -67,7 +79,8 @@ public class HelloWorld {
         });
 
         app.get("/courses/build", ctx -> {
-            ctx.render("courses/build.jte");
+            var page = new BuildCoursePage();
+            ctx.render("courses/build.jte", model("page", page));
         });
 
 //        app.get("/courses/{id}", ctx -> {
@@ -110,19 +123,26 @@ public class HelloWorld {
 
 
         app.get("/users/build", ctx -> {
-            ctx.render("users/build.jte");
+            var page = new BuildUserPage();
+            ctx.render("users/build.jte", model("page", page));
         });
 
         app.post("/users", ctx -> {
             var name = ctx.formParam("name");
             var email = ctx.formParam("email").trim().toLowerCase();
-            var password = ctx.formParam("password");
-            var passwordConfirmation = ctx.formParam("passwordConfirmation");
 
-            var user = new User(name, email, password);
-            UserRepository.save(user);
-
-            ctx.redirect("/users");
+            try {
+                var passwordConfirmation = ctx.formParam("passwordConfirmation");
+                var password = ctx.formParamAsClass("password", String.class)
+                        .check(value -> value.equals(passwordConfirmation), "Пароли не совпадают")
+                        .get();
+                var user = new User(name, email, password);
+                UserRepository.save(user);
+                ctx.redirect("/users");
+            } catch (ValidationException e) {
+                var page = new BuildUserPage(name, email, e.getErrors());
+                ctx.render("users/build.jte", model("page", page));
+            }
         });
 
         app.get("/users", ctx -> {
