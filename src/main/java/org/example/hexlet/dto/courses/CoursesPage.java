@@ -17,4 +17,8 @@ public class CoursesPage {
      this.term = term;
      this.filter = filter;
  }
+
+ public CoursesPage(List<Course> courses) {
+     this.courses = courses;
+ }
 }

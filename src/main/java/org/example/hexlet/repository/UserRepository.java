@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.example.hexlet.model.User;
 
+import io.javalin.http.NotFoundResponse;
+
 public class UserRepository {
     private static List<User> entities = new ArrayList<User>();
 
@@ -30,5 +32,10 @@ public class UserRepository {
 
     public static List<User> getEntities() {
         return entities;
+    }
+
+    public static void delete(Long id) {
+        var user = UserRepository.find(id).orElseThrow(() -> new NotFoundResponse("User not found"));
+        entities.remove(user);
     }
 }

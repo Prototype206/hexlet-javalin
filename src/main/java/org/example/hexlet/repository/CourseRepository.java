@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.example.hexlet.model.Course;
 
+import io.javalin.http.NotFoundResponse;
+
 public class CourseRepository {
     private static List<Course> entities = new ArrayList<Course>();
 
@@ -30,5 +32,10 @@ public class CourseRepository {
 
     public static List<Course> getEntities() {
         return entities;
+    }
+
+    public static void delete(Long id) {
+        var course = CourseRepository.find(id).orElseThrow(() -> new NotFoundResponse("Course not found"));
+        entities.remove(course);
     }
 }

@@ -38,7 +38,7 @@
   <div>
     <label>
       Password
-      <input type="password" required name="password" />
+      <input type="password" required name="password" value="${page.getPassword()}"/>
     </label>
   </div>
   

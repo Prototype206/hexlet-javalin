@@ -2,17 +2,20 @@
 @import org.example.hexlet.model.Course
 @param CoursesPage page
 
-<html>
+<html lang = "ru">
     <head>
+    	<meta charset = "UTF-8">
         <title>Hexlet</title>
     </head>
     <body>
+    <p>Фильтры</p>
 		<form action="/courses" method="get">
 			<input type="search" name="term" value="${page.getTerm()}" />
 			<input type = "search", name="filter", value="${page.getFilter()}" />
 			<input type="submit" value="Search" />
 		</form>
 		
+		<p>Курсы</p>
 		<div>
 		<table border = "1">
 			<tr>

@@ -1,6 +1,6 @@
-@import java.util.List
+@import org.example.hexlet.dto.users.UserPage
 @import org.example.hexlet.model.User
-@param List<User> users
+@param UserPage page
 
 <html>
     <head>
@@ -16,14 +16,12 @@
 				<th>EMAIL</th>
 				<th>PASSWORD</th>
 			</tr>
-			@for(User user : users)
 			<tr>
-				<td>${user.getId()}</td>
-				<td>${user.getName()}</td>
-				<td>${user.getEmail()}</td>
-				<td>${user.getPassword()}</td>
+				<td>${page.getUser().getId()}</td>
+				<td>${page.getUser().getName()}</td>
+				<td>${page.getUser().getEmail()}</td>
+				<td>${page.getUser().getPassword()}</td>
 			</tr>
-			@endfor
 		</table>
 		</div>
 		
