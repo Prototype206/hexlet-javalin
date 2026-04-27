@@ -56,7 +56,7 @@ public class HelloWorld {
 //        Course course5 = new Course(6L, "Tanks", "Welcome to WarThunder!");
 //        List<Course> courses = List.of(course0, course1, course2, course3, course4, course5);
 
-        app.post("/courses", ctx -> {
+        app.post(NamedRoutes.coursesPath(), ctx -> {
             String name = ctx.formParam("name");
             String description = ctx.formParam("description");
             try {
@@ -67,33 +67,33 @@ public class HelloWorld {
 
                 var course = new Course(name, description);
                 CourseRepository.save(course);
-                ctx.redirect("/courses");
+                ctx.redirect(NamedRoutes.coursesPath());
             } catch (ValidationException e) {
                 var page = new BuildCoursePage(name, description, e.getErrors());
                 ctx.render("courses/build.jte", model("page", page));
             }
         });
 
-        app.get("/courses", ctx -> {
+        app.get(NamedRoutes.coursesPath(), ctx -> {
             ctx.render("courses/FileToBeWorking.jte", model("courses", CourseRepository.getEntities()));
         });
 
-        app.get("/courses/build", ctx -> {
+        app.get(NamedRoutes.buildCoursePath(), ctx -> {
             var page = new BuildCoursePage();
             ctx.render("courses/build.jte", model("page", page));
         });
 
-//        app.get("/courses/{id}", ctx -> {
-//            Long courseId = ctx.pathParamAsClass("id", Long.class).get();
-//            Course page = null;
-//            for(Course course : CourseRepository.getEntities()) {
-//                if(course.getId() == courseId) {
-//                    page = new Course(course.getId(), course.getName(), course.getDescription());
-//                    break;
-//                }
-//            }
-//            ctx.render("courses/show.jte", model("page", page));
-//        });
+        app.get(NamedRoutes.coursePath("{id}"), ctx -> {
+            Long courseId = ctx.pathParamAsClass("id", Long.class).get();
+            Course page = null;
+            for(Course course : CourseRepository.getEntities()) {
+                if(course.getId() == courseId) {
+                    page = new Course(course.getId(), course.getName(), course.getDescription());
+                    break;
+                }
+            }
+            ctx.render("courses/show.jte", model("page", page));
+        });
 
 //        app.get("/defence/{id}", ctx -> {
 //            var id = ctx.pathParam("id");
@@ -122,12 +122,12 @@ public class HelloWorld {
 
 
 
-        app.get("/users/build", ctx -> {
+        app.get(NamedRoutes.buildUserPath(), ctx -> {
             var page = new BuildUserPage();
             ctx.render("users/build.jte", model("page", page));
         });
 
-        app.post("/users", ctx -> {
+        app.post(NamedRoutes.usersPath(), ctx -> {
             var name = ctx.formParam("name");
             var email = ctx.formParam("email").trim().toLowerCase();
 
@@ -138,14 +138,14 @@ public class HelloWorld {
                         .get();
                 var user = new User(name, email, password);
                 UserRepository.save(user);
-                ctx.redirect("/users");
+                ctx.redirect(NamedRoutes.usersPath());
             } catch (ValidationException e) {
                 var page = new BuildUserPage(name, email, e.getErrors());
                 ctx.render("users/build.jte", model("page", page));
             }
         });
 
-        app.get("/users", ctx -> {
+        app.get(NamedRoutes.usersPath(), ctx -> {
             ctx.render("users/showUsers.jte", model("users", UserRepository.getEntities()));
         });
 
