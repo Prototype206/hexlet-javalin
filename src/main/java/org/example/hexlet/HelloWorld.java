@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.example.hexlet.controller.PagesController;
+import org.example.hexlet.controller.SessionsController;
 import org.example.hexlet.controller.UsersController;
 import org.example.hexlet.dto.MainPage;
 import org.example.hexlet.dto.courses.BuildCoursePage;
@@ -60,17 +61,7 @@ public class HelloWorld {
 //        Course course5 = new Course(6L, "Tanks", "Welcome to WarThunder!");
 //        List<Course> courses = List.of(course0, course1, course2, course3, course4, course5);
 
-        //Cookie test
-        app.get("/", ctx -> {
-            var visited = Boolean.valueOf(ctx.cookie("visited"));
-            var page = new MainPage(visited);
-            ctx.render("index.jte", model("page", page));
-            ctx.cookie("visited", String.valueOf(true));
-        });
 
-        app.before(ctx -> {
-                System.out.println("Today is: " + LocalDate.now());
-            });
         app.get(NamedRoutes.coursesPath(), ctx -> PagesController.index(ctx));
         app.get(NamedRoutes.buildCoursePath(), ctx -> PagesController.build(ctx));
         app.get(NamedRoutes.coursePath("{id}"), ctx -> PagesController.show(ctx));
@@ -78,6 +69,27 @@ public class HelloWorld {
         app.get(NamedRoutes.editCoursePath("{id}"), ctx -> PagesController.edit(ctx));
         app.patch(NamedRoutes.coursePath("{id}"), ctx -> PagesController.update(ctx));
         app.delete(NamedRoutes.coursePath("{id}"), ctx -> PagesController.destroy(ctx));
+
+        app.get("/", ctx -> SessionsController.index(ctx));
+        app.post("/sessions", ctx -> SessionsController.create(ctx));
+        app.get("/sessions/build", ctx -> SessionsController.build(ctx));
+        app.delete("/sessions", ctx -> SessionsController.destroy(ctx));
+
+        //Cookie test
+//        app.get("/", ctx -> {
+//            var visited = Boolean.valueOf(ctx.cookie("visited"));
+//            var page = new MainPage(visited);
+//            ctx.render("index.jte", model("page", page));
+//            ctx.cookie("visited", String.valueOf(true));
+//        });
+
+        app.before(ctx -> {
+                System.out.println("Today is: " + LocalDate.now());
+            });
+
+
+
+
 
 //        app.get("/defence/{id}", ctx -> {
 //            var id = ctx.pathParam("id");
