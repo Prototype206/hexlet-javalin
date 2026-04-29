@@ -2,10 +2,11 @@ package org.example.hexlet.dto.users;
 
 import java.util.List;
 import java.util.Map;
+import org.example.hexlet.dto.BasePage;
 
 import io.javalin.validation.ValidationError;
 
-public class BuildUserPage {
+public class BuildUserPage extends BasePage{
     private String name;
     private String email;
     private String password;

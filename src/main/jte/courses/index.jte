@@ -2,12 +2,9 @@
 @import org.example.hexlet.model.Course
 @param CoursesPage page
 
-<html lang = "ru">
-    <head>
-    	<meta charset = "UTF-8">
-        <title>Hexlet</title>
-    </head>
-    <body>
+@template.layout.main(
+	page = page,
+	content = @`
     <p>Фильтры</p>
 		<form action="/courses" method="get">
 			<input type="search" name="term" value="${page.getTerm()}" />
@@ -32,6 +29,4 @@
 			@endfor
 		</table>
 		</div>
-		
-    </body>
-</html>
+		`)
