@@ -1,0 +1,72 @@
+package org.example.hexlet;
+
+public class NamedRoutes {
+
+    //users
+    public static String usersPath() {
+        return "/users";
+    }
+
+    public static String buildUserPath() {
+        return "/users/build";
+    }
+
+    public static String userPath(Long id) {
+        return userPath(String.valueOf(id));
+    }
+
+    public static String userPath(String id) {
+        return "/users/" + id;
+    }
+
+    public static String editUserPath(String id) {
+        return "/users/" + id + "/edit";
+    }
+
+
+    //courses
+    public static String coursesPath() {
+        return "/courses";
+    }
+
+    public static String buildCoursePath() {
+        return "/courses/build";
+    }
+
+    // Это нужно, чтобы не преобразовывать типы снаружи
+    public static String coursePath(Long id) {
+        return coursePath(String.valueOf(id));
+    }
+
+    public static String coursePath(String id) {
+        return "/courses/" + id;
+    }
+
+    public static String editCoursePath(String id) {
+        return "/courses/" + id + "/edit";
+    }
+
+    public static String sessionsPath() {
+        return "/sessions";
+    }
+    public static String buildSessionPath() {
+        return "/sessions/build";
+    }
+    public static String mainPath() {
+        return "/";
+    }
+
+    public static String carsPath() {
+        return "/cars";
+    }
+    public static String carPath(Long id) {
+        return carPath(String.valueOf(id));
+    }
+    public static String carPath(String id) {
+        return "/cars/" + id;
+    }
+    public static String buildCarPath() {
+        return "/cars/build";
+    }
+
+}
