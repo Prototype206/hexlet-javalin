@@ -28,6 +28,9 @@ repositories {
 }
 
 dependencies {
+	//postgres
+	implementation("org.postgresql:postgresql:42.7.10")
+
 	implementation("gg.jte:jte:3.1.9")
 	implementation("io.javalin:javalin-rendering:6.1.3")
     implementation("io.javalin:javalin:6.1.3")
