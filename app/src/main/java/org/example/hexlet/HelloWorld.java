@@ -29,7 +29,7 @@ public class HelloWorld {
     public static Javalin getApp() throws Exception{
         var hikariConfig = new HikariConfig();
 
-        String dbUrl = System.getenv().getOrDefault("jdbc:postgresql://dpg-d7quvo8g4nts73capj9g-a:5432/tirion_m1yh?password=tHHLjTcOdiHvZq3ktRgCJXy2LWkHfJXV&user=tirion", "jdbc:h2:mem:hexlet_project;DB_CLOSE_DELAY=-1;");
+        String dbUrl = System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:hexlet_project;DB_CLOSE_DELAY=-1;");
 
         hikariConfig.setJdbcUrl(dbUrl);
 
